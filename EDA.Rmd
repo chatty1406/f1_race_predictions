@@ -1,0 +1,116 @@
+title: "F1 Race Predictions"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+```
+
+#### Reading all the files
+
+```{r}
+circuits <-read.csv("circuits.csv", header = FALSE)
+names(circuits) <- c("circuitId","circuitRef","name","location","country",
+                     "lat","lng","alt","url")
+
+constructor_results <-read.csv("constructor_results.csv")
+names(constructor_results) <- c("constructorResultsId","raceId","constructorId","points","status")
+
+constructor_standings <- read.csv("constructor_standings.csv")
+names(constructor_standings) <- c("constructorStandingsId","raceId","constructorId","points","position","positionText","wins")
+
+constructors <- read.csv("constructors.csv")
+names(constructors) <- c("constructorId","constructorRef","name","nationality","url")
+
+driver <- read.csv("driver.csv")
+names(driver) <- c("driverId","driverRef","number","code","forename","surname","dob","nationality","url")
+
+driver_standings <- read.csv("driver_standings.csv")
+names(driver_standings) <- c("driverStandingsId","raceId","driverId","points","position","positionText","wins")
+
+lap_times <- read.csv("lap_times.csv")
+names(lap_times) <- c("raceId","driverId","lap","position","time","milliseconds")
+
+pit_stops <- read.csv("pit_stops.csv")
+names(pit_stops) <- c("raceId","driverId","stop","lap","time","duration","milliseconds")
+
+qualifying <- read.csv("qualifying.csv")
+names(qualifying) <- c("qualifyId","raceId","driverId","constructorId","number","position","q1","q2","q3")
+
+races <- read.csv("races.csv")
+names(races) <- c("raceId","year","round","circuitId","name","date","time","url")
+
+results <- read.csv("results.csv")
+names(results) <- c("resultId","raceId","driverId","constructorId","number","grid","position","positionText",
+                    "positionOrder","points","laps","time","milliseconds","fastestLap","rank",
+                    "fastestLapTime","fastestLapSpeed","statusId")
+
+seasons <- read.csv("seasons.csv")
+names(seasons) <- c("year","url")
+
+status <- read.csv("status.csv")
+names(seasons) <- c("statusId","status")
+
+```
+
+```{r}
+
+circuits %>% summary()
+```
+
+```{r}
+constructor_results %>% summary()
+```
+
+```{r}
+constructor_standings %>% summary()
+```
+
+```{r}
+constructors %>% summary()
+```
+
+```{r}
+driver %>% summary()
+```
+
+```{r}
+driver_standings %>% summary()
+```
+
+```{r}
+lap_times %>% summary()
+```
+
+```{r}
+pit_stops %>% summary()
+```
+
+```{r}
+qualifying %>% summary()
+```
+
+```{r}
+races %>% summary()
+```
+
+```{r}
+results %>% summary()
+```
+
+```{r}
+seasons %>% summary()
+```
+
+```{r}
+status %>% summary()
+```
+
+```{r}
+a<- read.csv("results.csv")
+```
+
+```{r}
+a %>% head()
+```
+
