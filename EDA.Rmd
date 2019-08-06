@@ -10,46 +10,69 @@ library(dplyr)
 
 ```{r}
 circuits <-read.csv("circuits.csv", header = FALSE)
-names(circuits) <- c("circuitId","circuitRef","name","location","country",
-                     "lat","lng","alt","url")
+names(circuits) <- c("circuitId","circuitRef","circuit_name","circuit_location","circuit_country", 
+                     "circuit_lat","circuit_lng","circuit_alt","circuit_url")
 
 constructor_results <-read.csv("constructor_results.csv")
-names(constructor_results) <- c("constructorResultsId","raceId","constructorId","points","status")
+names(constructor_results) <- c("constructorResultsId","raceId","constructorId",
+                                "constructor_results_points",
+                                "constructor_results_status")
 
 constructor_standings <- read.csv("constructor_standings.csv")
-names(constructor_standings) <- c("constructorStandingsId","raceId","constructorId","points","position","positionText","wins")
+names(constructor_standings) <- c("constructorStandingsId","raceId",
+                                "constructorId","constructor_standings_points",
+                                "constructor_standings_position",
+                                "constructor_standings_positionText",
+                                "constructor_standings_wins")
 
 constructors <- read.csv("constructors.csv")
-names(constructors) <- c("constructorId","constructorRef","name","nationality","url")
+names(constructors) <- c("constructorId","constructorRef","constructor_name",
+                         "constructor_nationality","constructor_url")
 
 driver <- read.csv("driver.csv")
-names(driver) <- c("driverId","driverRef","number","code","forename","surname","dob","nationality","url")
+names(driver) <- c("driverId","driverRef","driver_number","driver_code",
+                   "driver_forename","driver_surname","driver_dob",
+                   "driver_nationality","driver_url")
 
 driver_standings <- read.csv("driver_standings.csv")
-names(driver_standings) <- c("driverStandingsId","raceId","driverId","points","position","positionText","wins")
+names(driver_standings) <- c("driverStandingsId","raceId",
+                             "driverId",
+                             "driver_standings_points",
+                             "driver_standings_position",
+                             "driver_standings_positionText",
+                             "driver_standings_wins")
 
 lap_times <- read.csv("lap_times.csv")
-names(lap_times) <- c("raceId","driverId","lap","position","time","milliseconds")
+names(lap_times) <- c("raceId","driverId","lap_times_lap",
+                      "lap_times_position","lap_times_time","lap_times_milliseconds")
 
 pit_stops <- read.csv("pit_stops.csv")
-names(pit_stops) <- c("raceId","driverId","stop","lap","time","duration","milliseconds")
+names(pit_stops) <- c("raceId","driverId","pit_stops_stop",
+                      "pit_stops_lap","pit_stops_time",
+                      "pit_stops_duration","pit_stops_milliseconds")
 
 qualifying <- read.csv("qualifying.csv")
-names(qualifying) <- c("qualifyId","raceId","driverId","constructorId","number","position","q1","q2","q3")
+names(qualifying) <- c("qualifyId","raceId","driverId","constructorId",
+                       "qualifying_number","qualifying_position","q1","q2","q3")
 
 races <- read.csv("races.csv")
-names(races) <- c("raceId","year","round","circuitId","name","date","time","url")
+names(races) <- c("raceId","race_year","race_round","circuitId","race_name",
+                  "race_date","race_time","race_url")
 
 results <- read.csv("results.csv")
-names(results) <- c("resultId","raceId","driverId","constructorId","number","grid","position","positionText",
-                    "positionOrder","points","laps","time","milliseconds","fastestLap","rank",
-                    "fastestLapTime","fastestLapSpeed","statusId")
+names(results) <- c("resultId","raceId","driverId","constructorId",
+                    "results_number","results_grid","results_position",
+                    "results_positionText",
+                    "results_positionOrder",
+                    "results_points","results_laps","results_time",
+                    "results_milliseconds","results_fastestLap","results_rank",
+                    "results_fastestLapTime","results_fastestLapSpeed","statusId")
 
 seasons <- read.csv("seasons.csv")
-names(seasons) <- c("year","url")
+names(seasons) <- c("seasons_year","seasons_url")
 
 status <- read.csv("status.csv")
-names(seasons) <- c("statusId","status")
+names(status) <- c("status_statusId","status_status")
 
 ```
 
@@ -107,10 +130,28 @@ status %>% summary()
 ```
 
 ```{r}
-a<- read.csv("results.csv")
+feats <-
+results %>%
+  inner_join(races, by = "raceId") %>% 
+  inner_join(qualifying, by = c("raceId" = "raceId", 
+                                "driverId" = "driverId", "constructorId" = "constructorId")) %>% 
+  inner_join(pit_stops,by = c("raceId" = "raceId", "driverId" = "driverId")) %>% 
+  inner_join(lap_times,by = c("raceId" = "raceId", "driverId" = "driverId")) %>% 
+  inner_join(driver_standings, by = c("raceId" = "raceId", 
+                                      "driverId" = "driverId")) %>% 
+  inner_join(driver,by = "driverId") %>% 
+  inner_join(constructor_standings, by = c("raceId" = "raceId", 
+                                           "constructorId" = "constructorId")) %>% 
+  inner_join(constructor_results, by = c("raceId" = "raceId", 
+                                           "constructorId" = "constructorId")) %>%
+  inner_join(constructors, by = "constructorId") %>% 
+  inner_join(circuits, by = "circuitId") %>% 
+  inner_join(seasons, by= c("race_year" = "seasons_year")) %>% 
+  inner_join(status,by = c("statusId" = "status_statusId"))
+  
 ```
 
 ```{r}
-a %>% head()
+feats %>% write.csv("feats_all.csv")
 ```
 
