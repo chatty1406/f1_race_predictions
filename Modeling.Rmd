@@ -1,0 +1,68 @@
+---
+title: "Modeling"
+output: html_notebook
+---
+
+```{r}
+library(lubridate)
+```
+
+
+```{r}
+feats_all <- read.csv("feats_all.csv")
+```
+
+
+
+```{r}
+feats_all %>% colnames()
+```
+```{r}
+feats_all$results_position <- as.numeric(feats_all$results_position)
+feats_all$results_time <- as.numeric(feats_all$results_time)
+feats_all$results_milliseconds <- as.numeric(feats_all$results_milliseconds)
+feats_all$results_fastestLap <- as.numeric(feats_all$results_fastestLap)
+feats_all$results_fastestLapSpeed <- as.numeric(feats_all$results_fastestLapSpeed)
+feats_all$pit_stops_duration <- as.numeric(feats_all$pit_stops_duration)
+feats_all$results_fastestLap <- as.numeric(feats_all$results_fastestLap)
+```
+
+```{r}
+feats_all %>% glimpse()
+```
+
+```{r}
+feats_all <-
+feats_all %>% 
+  mutate(race_date = ymd(race_date)) %>% 
+  mutate(race_time = hms(race_time)) %>% 
+  mutate(driver_dob = ymd(driver_dob)) %>% 
+  mutate(circuit_alt = as.numeric(driver_dob)) %>% 
+  mutate(pit_stops_time = hms(pit_stops_time))
+```
+
+
+
+
+
+```{r}
+feats_all %>% 
+  group_by(race_year) %>% 
+  mean(results_fastestLapSpeed) %>%
+  arrange(desc(race_year))
+```
+
+```{r}
+feats_all$q1 <- feats_all$q1 %>% as.POSIXct(format = '%H:%M:%S') %>% format("%H:%M:%S")
+feats_all$q2 <- feats_all$q2 %>% as.POSIXct(format = '%H:%M:%S') %>% format("%H:%M:%S")
+feats_all$q3 <- feats_all$q3 %>% as.POSIXct(format = '%H:%M:%S') %>% format("%H:%M:%S")
+
+feats_all$lap_times_time <- feats_all$lap_times_time %>% as.POSIXct(format = '%H:%M:%S') %>% format("%H:%M:%S")
+
+```
+
+
+```{r}
+format(a, '%M.%OS5')
+```
+
