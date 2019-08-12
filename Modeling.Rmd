@@ -41,6 +41,10 @@ feats_all %>%
   mutate(pit_stops_time = hms(pit_stops_time))
 ```
 
+```{r}
+feats_all %>% glimpse()
+```
+
 
 
 
